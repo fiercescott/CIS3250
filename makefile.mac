@@ -1,0 +1,31 @@
+###############################################################VARIABLES
+CC = gcc
+
+SRCDIR = src
+OBJDIR = obj
+INCDIR = include
+BINDIR = bin
+
+CFLAGS = -I$(INCDIR) -lcurses
+
+_INC = loadLevel.h gameStructs.h
+INC = $(patsubst %,$(INCDIR)/%,$(_INC))
+
+
+#############################################################BUILD RULES
+testLoadLevel: $(OBJDIR)/testLoadLevel.o $(OBJDIR)/loadLevel.o
+	$(CC) -o $(BINDIR)/testLoadLevel.out $^ $(CFLAGS)
+	@echo Done
+
+$(OBJDIR)/testLoadLevel.o: $(SRCDIR)/testLoadLevel.c $(INC)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+$(OBJDIR)/loadLevel.o: $(SRCDIR)/loadLevel.c
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+
+#############################################################CLEAN RULES
+clean:
+	rm $(OBJDIR)/*
+	rm $(BINDIR)/*
+	@echo Done cleaning

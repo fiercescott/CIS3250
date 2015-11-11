@@ -1,0 +1,48 @@
+#####################################################PLATFORM DEFINITION
+PLATFORM = windows
+#PLATFORM = mac
+
+
+###############################################################VARIABLES
+CC = gcc
+EXENAME = a
+INCDIR = include
+ifeq ($(PLATFORM), windows)
+	CURSES = pdcurses
+	DEL = del /s /q
+	FIXPATH = $(subst /,\,$1)
+	EXE = $(EXENAME)
+else
+	CURSES = curses
+	DEL = rm
+	FIXPATH = $(subst \,/,$1)
+	EXE = $(EXENAME).out
+endif
+CFLAGS = -I$(INCDIR) -l$(CURSES)
+
+SRCDIR = src
+OBJDIR = obj
+BINDIR = bin
+
+_INC = loadLevel.h gameStructs.h
+INC = $(patsubst %,$(INCDIR)/%,$(_INC))
+
+
+#############################################################BUILD RULES
+testLoadLevel: $(OBJDIR)/testLoadLevel.o $(OBJDIR)/loadLevel.o $(INC)
+	$(CC) -o $(BINDIR)/$@ $^ $(CFLAGS)
+	@echo Done
+
+$(OBJDIR)/testLoadLevel.o: $(SRCDIR)/testLoadLevel.c $(INC)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+$(OBJDIR)/loadLevel.o: $(SRCDIR)/loadLevel.c
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+
+#############################################################CLEAN RULES
+.PHONY: clean
+clean:
+	$(DEL) $(call FIXPATH, $(OBJDIR)\*)
+	$(DEL) $(call FIXPATH, $(BINDIR)\*)
+	@echo Done cleaning
