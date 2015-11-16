@@ -76,6 +76,7 @@ void createInterface()
 //manages user curser movement with w,a,s,d
 //a button to select units and to run the game havent been decided yet (I think)
 //add in function to remove a unit from the array
+//may want to consider getting rid of sideways movement, have a pure vertical menu
 void manageUserInput()
 {
     //initialize variables
@@ -144,6 +145,11 @@ void manageUserInput()
                 break;
 
             case 'selection key':
+                if(at position specified to start game)
+                {
+                    runGame(unitArray);
+                    break;
+                }
                 if ((xPos == )&&(yPos == ))
                 {
                     selectionChar = 'n';
@@ -159,8 +165,6 @@ void manageUserInput()
                 unitArray = createUnits(unitArray, selectionChar, &cost);
                 break;
 
-            case 'start game key':
-                runGame(unitArray);
 
         }
 
