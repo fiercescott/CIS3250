@@ -1,0 +1,231 @@
+//Made by Scott Collier
+
+//turns out the compiler I use doesnt like ncurses, will try to fix but for now here is the base code
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <ncurses.h>
+
+//unit struct as described in document
+typedef struct unit
+{
+    char type;
+    int health;
+    int speed;
+    int xPos;
+    int yPos;
+    int positionIndex;
+}unit;
+
+//declaration of functions
+void createInterface();
+void manageUserInput();
+unit * createUnits(unit unitArray[], char selectionChar, int * costPointer);
+void runGame(unit unitArray[]);
+
+//main function
+int main()
+{
+    initscr();
+    cbreak();
+    noecho();
+
+    createInterface();
+    manageUserInput();
+
+    return 0;
+}
+
+//Creates the box for the user interface and its contents
+//My compiler seems to not like ncurses, so I left positioning and look open
+//feel free to change any positioning values
+void createInterface()
+{
+    int i;
+
+    i = 0;
+
+    for(i = 0; i < 20; i++)
+    {
+        mvaddch(i,0,'X');
+    }
+
+    for(i = 0; i < 20; i++)
+    {
+        mvaddch(i,20,'X');
+    }
+
+    for(i = 0; i < 20; i++)
+    {
+        mvaddch(0,i,'X');
+    }
+
+    for(i = 0; i < 20; i++)
+    {
+        mvaddch(20,i,'X');
+    }
+
+    //display unit selection
+    //display points remaining
+    //displays units currently in array
+
+}
+
+
+
+//manages user curser movement with w,a,s,d
+//a button to select units and to run the game havent been decided yet (I think)
+//add in function to remove a unit from the array
+void manageUserInput()
+{
+    //initialize variables
+    int i;
+    int xPos;
+    int yPos;
+    char input;
+    unit unitArray[20];
+    char selectionChar;
+    int cost;
+    int *costPointer;
+
+
+
+    i = 0;
+    xPos = 0;
+    yPos = 0;
+    input = ' ';
+    selectionChar = ' ';
+    cost = 1000;
+
+    costPointer = &cost;
+
+
+
+    //read player input and act upon it
+    while (i == 0)
+    {
+        input = getch();
+
+        switch (input)
+        {
+            //move up if 'w' is pressed
+            case 'w':
+                mvaddch(yPos,xPos,' ');
+                yPos = yPos - 1;
+                mvaddch(yPos, xPos, '>');
+                break;
+
+            //move down if 's' is pressed
+            case 's':
+                mvaddch(yPos,xPos,' ');
+                yPos = yPos + 1;
+                mvaddch(yPos, xPos, '>');
+                break;
+
+            //move left if 'a' is pressed
+            case 'a':
+                mvaddch(yPos,xPos,' ');
+                xPos = xPos - 1;
+                mvaddch(yPos, xPos, '>');
+                break;
+
+            //move right if 'd' is pressed
+            case 'd':
+                mvaddch(yPos,xPos,' ');
+                xPos = xPos + 1;
+                mvaddch(yPos, xPos, '>');
+                break;
+
+            //return a value to quit the game when 'q' is pressed
+            case 'q':
+                clear();
+                refresh();
+                i = 1;
+                break;
+
+            case 'selection key':
+                if ((xPos == )&&(yPos == ))
+                {
+                    selectionChar = 'n';
+                }
+                if ((xPos == )&&(yPos == ))
+                {
+                    selectionChar = 'f';
+                }
+                 if ((xPos == )&&(yPos == ))
+                {
+                    selectionChar = 't';
+                }
+                unitArray = createUnits(unitArray, selectionChar, &cost);
+                break;
+
+            case 'start game key':
+                runGame(unitArray);
+
+        }
+
+        move (yPos, xPos);
+        refresh();
+    }
+}
+
+//just takes in a value,creates the unit, adds it to the array, and subtracts from points
+//dont know if I gotta do anything for xPos or yPos so I just left at zero
+//any value is subject to change, decide on the cost of units
+unit * createUnits(unit unitArray[], char selectionChar, int * costPointer)
+{
+    unit unitVar;
+    switch(selectionChar)
+    {
+        case 'n':
+            unitVar.type = 'n'
+            unitVar.health = 30;
+            unitVar.speed = 2;
+            unitVar.xPos = 0;
+            unitVar.yPos = 0;
+            unitVar.positionIndex = 0;
+
+            if (*costPointer -  >= 0)
+            {
+                *costPointer = *costPointer - ;
+            }
+
+            break;
+        case 'f':
+            unitVar.type = 'f'
+            unitVar.health = 15;
+            unitVar.speed = 3;
+            unitVar.xPos = 0;
+            unitVar.yPos = 0;
+            unitVar.positionIndex = 0;
+
+            if (*costPointer -  >= 0)
+            {
+                *costPointer = *costPointer - ;
+            }
+            break;
+        case 't':
+            unitVar.type = 't'
+            unitVar.health = 60;
+            unitVar.speed = 1;
+            unitVar.xPos = 0;
+            unitVar.yPos = 0;
+            unitVar.positionIndex = 0;
+
+            if (*costPointer -  >= 0)
+            {
+                *costPointer = *costPointer - ;
+            }
+            break;
+    }
+    //add unit to array
+
+    return unitArray;
+}
+
+
+void runGame(unit unitArray[])
+{
+    //if prep work is needed for unit positioning do it here
+    //send the unit array to some other function to start game
+}
