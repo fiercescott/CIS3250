@@ -48,17 +48,11 @@ int readLevelFile(char levelFile[])
 	refresh();*/
 	
 	int width, height;		//Map dimensions
-	int startX, startY;		//Coordinates of first position of the path
-	int endX, endY;			//Coordinates of last position of the path
 	int nTowers;			//Number of towers in the level
 	
 	//Read level info
 	if (fscanf(file, "%d", &width) == EOF)		return 0;
 	if (fscanf(file, "%d", &height) == EOF)		return 0;
-	if (fscanf(file, "%d", &startX) == EOF)		return 0;
-	if (fscanf(file, "%d", &startY) == EOF)		return 0;
-	if (fscanf(file, "%d", &endX) == EOF)		return 0;
-	if (fscanf(file, "%d", &endY) == EOF)		return 0;
 	if (fscanf(file, "%d", &nTowers) == EOF)	return 0;
 	
 	printw("\nNum of towers: %d", nTowers);
