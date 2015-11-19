@@ -3,6 +3,6 @@
 
 #include <gameStructs.h>
 
-tower * loadLevel (char * filename, int * pathLength, path * thePath, int * nTowers);
+tower * loadLevel (int * pathLength, path * thePath, int * nTowers);
 
 #endif
