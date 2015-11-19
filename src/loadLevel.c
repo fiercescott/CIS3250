@@ -3,6 +3,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+char **readLevelFile(int *width, int *height, int *nTowers);
+/*void buildMap();
+void initializeTowers();*/
 
 ////////////////////////////////////////////////////FUNCTION DEFINITIONS
 int isInBounds(int y, int x, int height, int width){
@@ -14,93 +17,59 @@ int isInBounds(int y, int x, int height, int width){
     return 1;
 }
 
-tower * loadLevel (char * filename, int * pathLength, path * thePath, int * nTowers){
-    FILE * file = fopen(filename, "r");
-    if (file == NULL) return NULL;
+tower * loadLevel (int * pathLength, path * thePath, int * nTowers){
+    char **levelString;
+    int width;
+    int height;
     
-    int height = 0;
-    int width = 0;
-    int num = 0;
-    int count = 0;
-    int numT = 0;
-    int tCount;
-    tower * towers = NULL;
+    levelString = readLevelFile(&width, &height, nTowers);
     
-    if (fscanf(file, "%d %d", &width, &height) == EOF) return NULL;
+    printf("\nLevelString:");
+    int i, j;
+    for (i = 0; i < height; i++)
+        printf("\n%s", levelString[i]);
+    
+    /*tower * towers = NULL;
+    initializeTowers();
+    
+    buildMap();
+    
+    return towers;*/
+}
+
+char **readLevelFile(int *width, int *height, int *nTowers)
+{
+    char fileName[100];
+    printf("\nInput the level file name: ");
+    fgets(fileName, 100, stdin);
+    int index = strlen(fileName);
+    fileName[index-1] = '\0';
+    
+    FILE * file = fopen(fileName, "r");
+    if (file == NULL){
+        printf("\nNULL");
+        return NULL;
+    }
+    
+    if (fscanf(file, "%d %d", width, height) == EOF) return NULL;
     if (fscanf(file, "%d", nTowers) == EOF) return NULL;
     
-    char levelString [height][width+1];
-    char temp[width + 1];
-    tCount = *nTowers;
-    towers = (tower*)malloc (sizeof (tower) * tCount);
+    char **levelString =  malloc(sizeof(char*) * *height);
+    
+    char temp[*width + 1];
     
     int i;
-    for (i = 0; i < height; i++){
+    for (i = 0; i < *height; i++){
         if (fscanf(file, "%s", temp) == EOF) return NULL;
-        strncpy(levelString[i], temp, width);
+        levelString[i] = malloc(sizeof(char) * *width);
+        strncpy(levelString[i], temp, *width);
     }
     
-    //Initialize towers
-    int startX, startY;
-    int x, y;
-    for (x = 0; x < width; x++){
-        for (y = 0; y < height; y++){
-            if (levelString[y][x] == '+'){
-                num++;
-            }
-            else if (levelString[y][x] == '='){
-                startX = x;
-                startY = y;
-                num++;
-            }
-            else if (levelString[y][x] == '$'){
-                num++;
-            }
-            else if (levelString[y][x] == 'N'){
-                towers[numT].type = NORMAL;
-                towers[numT].x = x;
-                towers[numT].y = y;
-                towers[numT].fireRate = 5;
-                towers[numT].counter = 1;
-                towers[numT].damage = 5;
-                towers[numT].range = 5;
-                numT++;
-            }
-            else if (levelString[y][x] == 'M'){
-                towers[numT].type = MISSILE;
-                towers[numT].x = x;
-                towers[numT].y = y;
-                towers[numT].fireRate = 3;
-                towers[numT].counter = 1;
-                towers[numT].damage = 10;
-                towers[numT].range = 8;
-                numT++;
-            }
-            else if (levelString[y][x] == 'A'){
-                towers[numT].type = ARCHER;
-                towers[numT].x = x;
-                towers[numT].y = y;
-                towers[numT].fireRate = 7;
-                towers[numT].counter = 1;
-                towers[numT].damage = 3;
-                towers[numT].range = 10;
-                numT++;
-            }
-            else if (levelString[y][x] == 'S'){
-                towers[numT].type = SLOW;
-                towers[numT].x = x;
-                towers[numT].y = y;
-                towers[numT].fireRate = 5;
-                towers[numT].counter = 1;
-                towers[numT].damage = 0;
-                towers[numT].range = 7;
-                numT++;
-            }
-        }
-    }
-    
-    *pathLength = num;
-    
+    return levelString;
+}
+
+/*void buildMap()
+{
     //Build path
     int index = 0;  //Index of the path position
     y = startY;
@@ -184,3 +153,71 @@ tower * loadLevel (char * filename, int * pathLength, path * thePath, int * nTow
     
     return towers;
 }
+
+void initializeTowers()
+{
+    towers = (tower*)malloc (sizeof (tower) * tCount);
+    int numT = 0;
+    
+    //Initialize towers
+    int startX, startY;
+    int x, y;
+    for (x = 0; x < width; x++){
+        for (y = 0; y < height; y++){
+            if (levelString[y][x] == '+'){
+                num++;
+            }
+            else if (levelString[y][x] == '='){
+                startX = x;
+                startY = y;
+                num++;
+            }
+            else if (levelString[y][x] == '$'){
+                num++;
+            }
+            else if (levelString[y][x] == 'N'){
+                towers[numT].type = NORMAL;
+                towers[numT].x = x;
+                towers[numT].y = y;
+                towers[numT].fireRate = 5;
+                towers[numT].counter = 1;
+                towers[numT].damage = 5;
+                towers[numT].range = 5;
+                numT++;
+            }
+            else if (levelString[y][x] == 'M'){
+                towers[numT].type = MISSILE;
+                towers[numT].x = x;
+                towers[numT].y = y;
+                towers[numT].fireRate = 3;
+                towers[numT].counter = 1;
+                towers[numT].damage = 10;
+                towers[numT].range = 8;
+                numT++;
+            }
+            else if (levelString[y][x] == 'A'){
+                towers[numT].type = ARCHER;
+                towers[numT].x = x;
+                towers[numT].y = y;
+                towers[numT].fireRate = 7;
+                towers[numT].counter = 1;
+                towers[numT].damage = 3;
+                towers[numT].range = 10;
+                numT++;
+            }
+            else if (levelString[y][x] == 'S'){
+                towers[numT].type = SLOW;
+                towers[numT].x = x;
+                towers[numT].y = y;
+                towers[numT].fireRate = 5;
+                towers[numT].counter = 1;
+                towers[numT].damage = 0;
+                towers[numT].range = 7;
+                numT++;
+            }
+        }
+    }
+    
+    *pathLength = num;
+}
+*/
