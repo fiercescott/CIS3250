@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 char **readLevelFile(int *width, int *height, int *nTowers);
-/*void buildMap();
-void initializeTowers();*/
+tower *initializeTowers(char **levelString, int width, int height, int *nTowers, int *pathLength);
+/*void buildMap();*/
 
 ////////////////////////////////////////////////////FUNCTION DEFINITIONS
 int isInBounds(int y, int x, int height, int width){
@@ -24,17 +24,16 @@ tower * loadLevel (int * pathLength, path * thePath, int * nTowers){
     
     levelString = readLevelFile(&width, &height, nTowers);
     
-    printf("\nLevelString:");
+    /*printf("\nLevelString:");
     int i, j;
     for (i = 0; i < height; i++)
-        printf("\n%s", levelString[i]);
+        printf("\n%s", levelString[i]);*/
     
-    /*tower * towers = NULL;
-    initializeTowers();
+    tower * towers = initializeTowers(levelString, width, height, nTowers, pathLength);
     
-    buildMap();
+    /*buildMap();*/
     
-    return towers;*/
+    return towers;
 }
 
 char **readLevelFile(int *width, int *height, int *nTowers)
@@ -66,6 +65,76 @@ char **readLevelFile(int *width, int *height, int *nTowers)
     }
     
     return levelString;
+}
+
+tower *initializeTowers(char **levelString, int width, int height, int *nTowers, int *pathLength)
+{
+    tower *towers = (tower*)malloc (sizeof (tower) * *nTowers);
+    int numT = 0;  //Conter for towers
+    int num = 0;  //Number of path positions
+    
+    //Initialize towers
+    int startX, startY;
+    int x, y;
+    for (x = 0; x < width; x++){
+        for (y = 0; y < height; y++){
+            if (levelString[y][x] == '+'){
+                num++;
+            }
+            else if (levelString[y][x] == '='){
+                startX = x;
+                startY = y;
+                num++;
+            }
+            else if (levelString[y][x] == '$'){
+                num++;
+            }
+            else if (levelString[y][x] == 'N'){
+                towers[numT].type = NORMAL;
+                towers[numT].x = x;
+                towers[numT].y = y;
+                towers[numT].fireRate = 5;
+                towers[numT].counter = 1;
+                towers[numT].damage = 5;
+                towers[numT].range = 5;
+                numT++;
+            }
+            else if (levelString[y][x] == 'M'){
+                towers[numT].type = MISSILE;
+                towers[numT].x = x;
+                towers[numT].y = y;
+                towers[numT].fireRate = 3;
+                towers[numT].counter = 1;
+                towers[numT].damage = 10;
+                towers[numT].range = 8;
+                numT++;
+            }
+            else if (levelString[y][x] == 'A'){
+                towers[numT].type = ARCHER;
+                towers[numT].x = x;
+                towers[numT].y = y;
+                towers[numT].fireRate = 7;
+                towers[numT].counter = 1;
+                towers[numT].damage = 3;
+                towers[numT].range = 10;
+                numT++;
+            }
+            else if (levelString[y][x] == 'S'){
+                towers[numT].type = SLOW;
+                towers[numT].x = x;
+                towers[numT].y = y;
+                towers[numT].fireRate = 5;
+                towers[numT].counter = 1;
+                towers[numT].damage = 0;
+                towers[numT].range = 7;
+                numT++;
+            }
+        }
+    }
+    
+    *pathLength = num;
+    
+    return towers;
 }
 
 /*void buildMap()
@@ -152,72 +221,5 @@ char **readLevelFile(int *width, int *height, int *nTowers)
     }
     
     return towers;
-}
+}*/
 
-void initializeTowers()
-{
-    towers = (tower*)malloc (sizeof (tower) * tCount);
-    int numT = 0;
-    
-    //Initialize towers
-    int startX, startY;
-    int x, y;
-    for (x = 0; x < width; x++){
-        for (y = 0; y < height; y++){
-            if (levelString[y][x] == '+'){
-                num++;
-            }
-            else if (levelString[y][x] == '='){
-                startX = x;
-                startY = y;
-                num++;
-            }
-            else if (levelString[y][x] == '$'){
-                num++;
-            }
-            else if (levelString[y][x] == 'N'){
-                towers[numT].type = NORMAL;
-                towers[numT].x = x;
-                towers[numT].y = y;
-                towers[numT].fireRate = 5;
-                towers[numT].counter = 1;
-                towers[numT].damage = 5;
-                towers[numT].range = 5;
-                numT++;
-            }
-            else if (levelString[y][x] == 'M'){
-                towers[numT].type = MISSILE;
-                towers[numT].x = x;
-                towers[numT].y = y;
-                towers[numT].fireRate = 3;
-                towers[numT].counter = 1;
-                towers[numT].damage = 10;
-                towers[numT].range = 8;
-                numT++;
-            }
-            else if (levelString[y][x] == 'A'){
-                towers[numT].type = ARCHER;
-                towers[numT].x = x;
-                towers[numT].y = y;
-                towers[numT].fireRate = 7;
-                towers[numT].counter = 1;
-                towers[numT].damage = 3;
-                towers[numT].range = 10;
-                numT++;
-            }
-            else if (levelString[y][x] == 'S'){
-                towers[numT].type = SLOW;
-                towers[numT].x = x;
-                towers[numT].y = y;
-                towers[numT].fireRate = 5;
-                towers[numT].counter = 1;
-                towers[numT].damage = 0;
-                towers[numT].range = 7;
-                numT++;
-            }
-        }
-    }
-    
-    *pathLength = num;
-}
-*/
