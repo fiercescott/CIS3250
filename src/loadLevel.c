@@ -3,9 +3,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+
 char **readLevelFile(int *width, int *height, int *nTowers);
-tower *initializeTowers(char **levelString, int width, int height, int *nTowers, int *pathLength);
-/*void buildMap();*/
+tower *initializeTowers(char **levelString, int width, int height, int *nTowers, int *pathLength, int *startX, int *startY);
+int buildMap(char **levelString, int width, int height, int pathLength, path *thePath, int startX, int startY);
+
 
 ////////////////////////////////////////////////////FUNCTION DEFINITIONS
 int isInBounds(int y, int x, int height, int width){
@@ -21,6 +23,7 @@ tower * loadLevel (int * pathLength, path * thePath, int * nTowers){
     char **levelString;
     int width;
     int height;
+    int startX, startY;
     
     levelString = readLevelFile(&width, &height, nTowers);
     
@@ -29,9 +32,16 @@ tower * loadLevel (int * pathLength, path * thePath, int * nTowers){
     for (i = 0; i < height; i++)
         printf("\n%s", levelString[i]);*/
     
-    tower * towers = initializeTowers(levelString, width, height, nTowers, pathLength);
+    tower * towers = initializeTowers(levelString, width, height, nTowers, pathLength, &startX, &startY);
+    if (towers == NULL){
+        return NULL;
+    }
     
-    /*buildMap();*/
+    int result = buildMap(levelString, width, height, *pathLength, thePath, startX, startY);
+    if (!result){
+        free(towers);
+        return NULL;
+    }
     
     return towers;
 }
@@ -67,14 +77,13 @@ char **readLevelFile(int *width, int *height, int *nTowers)
     return levelString;
 }
 
-tower *initializeTowers(char **levelString, int width, int height, int *nTowers, int *pathLength)
+tower *initializeTowers(char **levelString, int width, int height, int *nTowers, int *pathLength, int *startX, int *startY)
 {
     tower *towers = (tower*)malloc (sizeof (tower) * *nTowers);
     int numT = 0;  //Conter for towers
     int num = 0;  //Number of path positions
     
     //Initialize towers
-    int startX, startY;
     int x, y;
     for (x = 0; x < width; x++){
         for (y = 0; y < height; y++){
@@ -82,8 +91,8 @@ tower *initializeTowers(char **levelString, int width, int height, int *nTowers,
                 num++;
             }
             else if (levelString[y][x] == '='){
-                startX = x;
-                startY = y;
+                *startX = x;
+                *startY = y;
                 num++;
             }
             else if (levelString[y][x] == '$'){
@@ -137,12 +146,12 @@ tower *initializeTowers(char **levelString, int width, int height, int *nTowers,
     return towers;
 }
 
-/*void buildMap()
+int buildMap(char **levelString, int width, int height, int pathLength, path *thePath, int startX, int startY)
 {
     //Build path
     int index = 0;  //Index of the path position
-    y = startY;
-    x = startX;
+    int y = startY;
+    int x = startX;
     int nextY, nextX;  //Next neighbour position being checked
     int deltaY, deltaX;  //Current position - previous position (direction from previous to current)
     
@@ -173,7 +182,7 @@ tower *initializeTowers(char **levelString, int width, int height, int *nTowers,
     thePath->y[index] = y;
     index++;
 
-    while (index < *pathLength){
+    while (index < pathLength){
         //Check position directly opposite from previous path position
         if (isInBounds((nextY = y+deltaY), (nextX = x+deltaX), height, width)){
             if (levelString[nextY][nextX] == '+' || levelString[nextY][nextX] == '$'){
@@ -215,11 +224,8 @@ tower *initializeTowers(char **levelString, int width, int height, int *nTowers,
             }
         }
         
-        //If it didn't enter any of the ifs above, the path in the level file has some error
-        free(towers);
-        return NULL;
+        return 0;  //Level file malformed
     }
     
-    return towers;
-}*/
-
+    return 1;
+}
