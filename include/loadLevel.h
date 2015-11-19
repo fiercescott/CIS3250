@@ -1,6 +1,8 @@
 #ifndef _DEF_LOADLEVEL_H
 #define _DEF_LOADLEVEL_H
 
-int loadLevel(int nFiles, char *levelFiles[]);
+#include <gameStructs.h>
+
+tower * loadLevel (char * filename, int * pathLength, path * thePath, int * nTowers);
 
 #endif
