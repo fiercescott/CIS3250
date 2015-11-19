@@ -13,11 +13,17 @@ INC = $(patsubst %,$(INCDIR)/%,$(_INC))
 
 
 #############################################################BUILD RULES
-testLoadLevel: $(OBJDIR)/testLoadLevel.o $(OBJDIR)/loadLevel.o
+testLoadLevel: $(OBJDIR)/testLoadLevel.o $(OBJDIR)/loadLevel.o | $(BINDIR)
 	$(CC) -o $(BINDIR)/testLoadLevel.out $^ $(CFLAGS)
 	@echo Done
 
-$(OBJDIR)/testLoadLevel.o: $(SRCDIR)/testLoadLevel.c $(INC)
+$(OBJDIR):
+	mkdir $(OBJDIR)
+
+$(BINDIR):
+	mkdir $(BINDIR)
+	
+$(OBJDIR)/testLoadLevel.o: $(SRCDIR)/testLoadLevel.c $(INC) | $(OBJDIR)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(OBJDIR)/loadLevel.o: $(SRCDIR)/loadLevel.c
