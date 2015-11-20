@@ -1,5 +1,6 @@
 #include <curses.h>
-#include <gameStructs.h>
+#include <towerInterface.h>
+#include <pathInterface.h>
 #include <loadLevel.h>
 #include <stdlib.h>
 
@@ -32,8 +33,6 @@ int main(int argc, char *argv[]){
     }
     
     free (towers);
-    
-    
     
     return 0;
 }

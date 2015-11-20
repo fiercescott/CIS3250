@@ -1,5 +1,6 @@
 #include <curses.h>
-#include <gameStructs.h>
+#include <towerInterface.h>
+#include <pathInterface.h>
 #include <string.h>
 #include <stdlib.h>
 

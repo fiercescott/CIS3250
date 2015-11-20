@@ -8,7 +8,7 @@ BINDIR = bin
 
 CFLAGS = -I$(INCDIR) -lcurses
 
-_INC = loadLevel.h gameStructs.h
+_INC = loadLevel.h pathInterface.h towerInterface.h
 INC = $(patsubst %,$(INCDIR)/%,$(_INC))
 
 
