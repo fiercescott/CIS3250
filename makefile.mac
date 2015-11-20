@@ -6,7 +6,7 @@ OBJDIR = obj
 INCDIR = include
 BINDIR = bin
 
-CFLAGS = -I$(INCDIR) -lcurses
+CFLAGS = -Wall -I$(INCDIR) -lcurses
 
 _INC = loadLevel.h pathInterface.h towerInterface.h
 INC = $(patsubst %,$(INCDIR)/%,$(_INC))
@@ -32,6 +32,6 @@ $(OBJDIR)/loadLevel.o: $(SRCDIR)/loadLevel.c
 
 #############################################################CLEAN RULES
 clean:
-	rm $(OBJDIR)/*
-	rm $(BINDIR)/*
+	rm $(OBJDIR)/*.o
+	rm $(BINDIR)/*.out
 	@echo Done cleaning

@@ -21,20 +21,21 @@ int isInBounds(int y, int x, int height, int width){
 }
 
 tower * loadLevel (int * pathLength, path * thePath, int * nTowers, int *currency){
-    char **levelString;
-    int width;
-    int height;
-    int startX, startY;
+    char **levelString;     //Level map
+    int width;              //Width of the map
+    int height;             //Height of the map
+    int startX, startY;     //Coordinates of the begining of the path
     
     levelString = readLevelFile(&width, &height, nTowers, currency);
     
     tower * towers = initializeTowers(levelString, width, height, nTowers, pathLength, &startX, &startY);
     if (towers == NULL){
+        //Some error occured when initializing the towers
         return NULL;
     }
     
-    int result = buildMap(levelString, width, height, *pathLength, thePath, startX, startY);
-    if (!result){
+    if (!buildMap(levelString, width, height, *pathLength, thePath, startX, startY)){
+        //The path could not be initialized
         free(towers);
         return NULL;
     }
@@ -71,7 +72,7 @@ char **readLevelFile(int *width, int *height, int *nTowers, int *currency)
     
     FILE * file = fopen(fileName, "r");
     if (file == NULL){
-        printf("\nNULL");
+        printf("\nThere was a problem loading the level file %s.", fileName);
         return NULL;
     }
     
@@ -79,8 +80,7 @@ char **readLevelFile(int *width, int *height, int *nTowers, int *currency)
     if (fscanf(file, "%d", nTowers) == EOF) return NULL;
     if (fscanf(file, "%d", currency) == EOF) return NULL;
     
-    char **levelString =  malloc(sizeof(char*) * *height);
-    
+    char **levelString = malloc(sizeof(char*) * *height);
     char temp[*width + 1];
     
     int i;
@@ -96,8 +96,8 @@ char **readLevelFile(int *width, int *height, int *nTowers, int *currency)
 tower *initializeTowers(char **levelString, int width, int height, int *nTowers, int *pathLength, int *startX, int *startY)
 {
     tower *towers = (tower*)malloc (sizeof (tower) * *nTowers);
-    int numT = 0;  //Conter for towers
-    int num = 0;  //Number of path positions
+    int numT = 0;   //Conter for towers
+    int num = 0;    //Number of path positions
     
     //Initialize towers
     int x, y;
@@ -165,11 +165,11 @@ tower *initializeTowers(char **levelString, int width, int height, int *nTowers,
 int buildMap(char **levelString, int width, int height, int pathLength, path *thePath, int startX, int startY)
 {
     //Build path
-    int index = 0;  //Index of the path position
+    int index = 0;      //Index of the path position
     int y = startY;
     int x = startX;
-    int nextY, nextX;  //Next neighbour position being checked
-    int deltaY, deltaX;  //Current position - previous position (direction from previous to current)
+    int nextY, nextX;   //Next neighbour position being checked
+    int deltaY, deltaX; //Current position - previous position (direction from previous to current)
     
     //Initialize search direction
     if (startX == 0){
@@ -240,7 +240,7 @@ int buildMap(char **levelString, int width, int height, int pathLength, path *th
             }
         }
         
-        return 0;  //Level file malformed
+        return 0;  //The path is segmented. Level file malformed
     }
     
     return 1;

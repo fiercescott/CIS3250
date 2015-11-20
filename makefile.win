@@ -18,7 +18,7 @@ else
 	FIXPATH = $(subst \,/,$1)
 	EXE = $(EXENAME).out
 endif
-CFLAGS = -I$(INCDIR) -l$(CURSES)
+CFLAGS = -Wall -I$(INCDIR) -l$(CURSES)
 
 SRCDIR = src
 OBJDIR = obj
@@ -49,6 +49,6 @@ $(OBJDIR)/loadLevel.o: $(SRCDIR)/loadLevel.c
 #############################################################CLEAN RULES
 .PHONY: clean
 clean:
-	$(DEL) $(call FIXPATH, $(OBJDIR)\*)
-	$(DEL) $(call FIXPATH, $(BINDIR)\*)
+	$(DEL) $(call FIXPATH, $(OBJDIR)\*.o)
+	$(DEL) $(call FIXPATH, $(BINDIR)\*.exe)
 	@echo Done cleaning
