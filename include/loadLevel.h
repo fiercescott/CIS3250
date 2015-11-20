@@ -3,6 +3,6 @@
 
 #include <gameStructs.h>
 
-tower * loadLevel (int * pathLength, path * thePath, int * nTowers);
+tower * loadLevel (int * pathLength, path * thePath, int * nTowers, int *currency);
 
 #endif

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 
-char **readLevelFile(int *width, int *height, int *nTowers);
+char **readLevelFile(int *width, int *height, int *nTowers, int *currency);
 tower *initializeTowers(char **levelString, int width, int height, int *nTowers, int *pathLength, int *startX, int *startY);
 int buildMap(char **levelString, int width, int height, int pathLength, path *thePath, int startX, int startY);
 
@@ -19,18 +19,13 @@ int isInBounds(int y, int x, int height, int width){
     return 1;
 }
 
-tower * loadLevel (int * pathLength, path * thePath, int * nTowers){
+tower * loadLevel (int * pathLength, path * thePath, int * nTowers, int *currency){
     char **levelString;
     int width;
     int height;
     int startX, startY;
     
-    levelString = readLevelFile(&width, &height, nTowers);
-    
-    /*printf("\nLevelString:");
-    int i, j;
-    for (i = 0; i < height; i++)
-        printf("\n%s", levelString[i]);*/
+    levelString = readLevelFile(&width, &height, nTowers, currency);
     
     tower * towers = initializeTowers(levelString, width, height, nTowers, pathLength, &startX, &startY);
     if (towers == NULL){
@@ -46,13 +41,32 @@ tower * loadLevel (int * pathLength, path * thePath, int * nTowers){
     return towers;
 }
 
-char **readLevelFile(int *width, int *height, int *nTowers)
+char **readLevelFile(int *width, int *height, int *nTowers, int *currency)
 {
     char fileName[100];
-    printf("\nInput the level file name: ");
-    fgets(fileName, 100, stdin);
-    int index = strlen(fileName);
-    fileName[index-1] = '\0';
+    int levelID = 0;
+    
+    do
+    {
+        printf("\nInput the level number (1, 2 or 3): ");
+        scanf("%d", &levelID);
+        fflush(stdin);
+        if (levelID < 1 || levelID > 3)
+            printf("\nInvalid input. Please input a number (1, 2 or 3).");
+    } while (levelID < 1 || levelID > 3);
+    
+    switch (levelID)
+    {
+        case 1:
+            strcpy(fileName, "level1.txt");
+            break;
+        case 2:
+            strcpy(fileName, "level2.txt");
+            break;
+        case 3:
+            strcpy(fileName, "level3.txt");
+            break;
+    }
     
     FILE * file = fopen(fileName, "r");
     if (file == NULL){
@@ -62,6 +76,7 @@ char **readLevelFile(int *width, int *height, int *nTowers)
     
     if (fscanf(file, "%d %d", width, height) == EOF) return NULL;
     if (fscanf(file, "%d", nTowers) == EOF) return NULL;
+    if (fscanf(file, "%d", currency) == EOF) return NULL;
     
     char **levelString =  malloc(sizeof(char*) * *height);
     

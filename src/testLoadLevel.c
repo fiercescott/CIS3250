@@ -16,8 +16,9 @@ int main(int argc, char *argv[]){
     int pathLength;
     tower * towers;
     int nTowers;
+    int currency;
     
-    towers = loadLevel(&pathLength, &thePath, &nTowers);
+    towers = loadLevel(&pathLength, &thePath, &nTowers, &currency);
     
     int i;
     printf("\nTower type and coordinates:\n");
